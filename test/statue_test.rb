@@ -74,6 +74,16 @@ describe Statue do
       end
     end
 
+    it "allows to use a symbol for a custom success_method" do
+      Statue.report_success_or_failure("some.zero_event", success_method: :zero?) { 0 }
+      Statue.report_success_or_failure("some.life_event", success_method: :zero?) { 42 }
+      zero_event, life_event = Statue.backend.captures
+
+      assert_equal 2, Statue.backend.captures.size
+      assert_equal "some.zero_event.success:1|c", zero_event.to_s
+      assert_equal "some.life_event.failure:1|c", life_event.to_s
+    end
+
   end
 
 end
