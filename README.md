@@ -1,26 +1,43 @@
 # Statue
 
-Easily track application metrics into Statsie (Statsd compatible).
+Easily track application metrics into [Statsite](https://github.com/armon/statsite) (Statsd compatible).
 
-## Installation
+## Configuration
 
-Add this line to your application's Gemfile:
+The library has different backends, one to be used for production environment (ie. actually
+ sending metrics using the Statsd protocol), and the others for testing or developing.
 
+The available backends are:
+
+`Statue::UDPBackend` -> this is the one that actually sends metrics to the Statsd.
+
+eg.
 ```ruby
-gem 'statue'
+Statue.backend = Statue::UDPBackend.new(statsd_host, statsd_port)
 ```
 
-And then execute:
+`Statue::NullBackend`, this backend discards all metrics (useful for test environment, if you
+aren't interested in testing which metrics are sent).
 
-    $ bundle
+`Statue::CaptureBackend`, this backend collects all metrics (useful for test environment, if you
+arent interested in testing which metrics are sent). You can check the metrics with `Statue.backend.captures`
+and reset this array with `Statue.backend.captures.clear` or by setting a new instance before each test.
 
-Or install it yourself as:
+`Statue::LoggerBackend`, this backend logs the received metrics to a logger (useful for development purposes)
 
-    $ gem install statue
+eg.
+```ruby
+Statue.backend = Statue::LoggerBackend.new(Rails.logger)
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+`Statue.report_increment('metric.name')` -> send to Statsd an increment for the counter `metric.name`
+
+`Statue.report_duration('metric.name') { some_operation } # => some_operation_result` -> send to Statsd the measure for the block duration in `metric.name`
+
+`Statue.report_success_or_failure('metric.name') { some_operation } # => some_operation_result` -> checks the result of the block, if its a `truthy` value, then increments `metric.name.success`, else it increments `metric.name.failure`.
+
 
 ## Contributing
 
