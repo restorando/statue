@@ -22,6 +22,22 @@ module Statue
     backend << Metric.counter(metric_name, **options)
   end
 
+  def report_success_or_failure(metric_name, success_method: nil, **options, &block)
+    result  = block.call
+    success = success_method ? result.public_send(success_method) : result
+
+    if success
+      report_increment("#{metric_name}.success", **options)
+    else
+      report_increment("#{metric_name}.failure", **options)
+    end
+
+    result
+  rescue
+    report_increment("#{metric_name}.failure", **options)
+    raise
+  end
+
   def backend
     @backend ||= UDPBackend.new
   end
