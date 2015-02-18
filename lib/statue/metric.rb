@@ -11,12 +11,12 @@ module Statue
     attr_accessor :type, :name, :value, :sample_rate
 
     def self.counter(name, value = 1, **options)
-      new(type: 'c', value: value, name: name, **options)
+      new(type: :c, value: value, name: name, **options)
     end
 
     def self.measure(name, **options, &block)
       value = Statue.duration(&block)
-      new(type: 'ms', value: value, name: name, **options)
+      new(type: :ms, value: value, name: name, **options)
     end
 
     def initialize(type:, name:, value:, sample_rate: 1.0)
