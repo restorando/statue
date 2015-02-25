@@ -1,8 +1,8 @@
 # Statue
 
-/ ___)(_  _)/ _\(_  _)/ )( \(  __)
-\___ \  )( /    \ )(  ) \/ ( ) _) 
-(____/ (__)\_/\_/(__) \____/(____)
+    / ___)(_  _)/ _\(_  _)/ )( \(  __)
+    \___ \  )( /    \ )(  ) \/ ( ) _) 
+    (____/ (__)\_/\_/(__) \____/(____)
 Rock solid metrics report...
 
 Easily track application metrics into [Statsite](https://github.com/armon/statsite) (Statsd compatible).
