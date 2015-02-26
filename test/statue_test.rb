@@ -16,7 +16,7 @@ describe Statue do
 
   describe ".report_duration" do
 
-    it "Adds a counter metric to the backend" do
+    it "adds a measure metric to the backend using the block call duration" do
       Statue.stub(:duration, 1.5) do
         result = Statue.report_duration("some.timer") { nil }
 
@@ -29,6 +29,13 @@ describe Statue do
       result = Statue.report_duration("some.timer") { 42 }
 
       assert_equal 42, result
+    end
+
+    it "adds a measure metric to the backend using the fixed value" do
+      result = Statue.report_duration("some.timer", 2.5)
+
+      assert_equal 1, Statue.backend.captures.size
+      assert_equal "some.timer:2.5|ms", Statue.backend.captures.first.to_s
     end
 
     it "doesn't report duration if an exception is thrown" do

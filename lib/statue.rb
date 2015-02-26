@@ -10,9 +10,9 @@ module Statue
 
   attr_accessor :backend
 
-  def report_duration(metric_name, **options, &block)
+  def report_duration(metric_name, duration = nil, **options, &block)
     result = nil
-    backend << Metric.measure(metric_name, **options) do
+    backend << Metric.measure(metric_name, duration: duration, **options) do
       result = block.call
     end
     result

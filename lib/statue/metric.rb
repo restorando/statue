@@ -14,8 +14,8 @@ module Statue
       new(type: :c, value: value, name: name, **options)
     end
 
-    def self.measure(name, **options, &block)
-      value = Statue.duration(&block)
+    def self.measure(name, duration: nil, **options, &block)
+      value = duration || Statue.duration(&block)
       new(type: :ms, value: value, name: name, **options)
     end
 
