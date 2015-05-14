@@ -1,7 +1,7 @@
 # Statue
 
     / ___)(_  _)/ _\(_  _)/ )( \(  __)
-    \___ \  )( /    \ )(  ) \/ ( ) _) 
+    \___ \  )( /    \ )(  ) \/ ( ) _)
     (____/ (__)\_/\_/(__) \____/(____)
 Rock solid metrics report...
 
@@ -43,6 +43,9 @@ Statue.backend = Statue::LoggerBackend.new(Rails.logger)
 
 `Statue.report_success_or_failure('metric.name') { some_operation } # => some_operation_result` -> checks the result of the block, if its a `truthy` value, then increments `metric.name.success`, else it increments `metric.name.failure`.
 
+### Rack Integration
+
+We provide a middleware to track basic request metrics, see: Statue::RackStatistics
 
 ## Contributing
 
