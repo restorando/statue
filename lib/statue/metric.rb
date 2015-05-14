@@ -5,7 +5,7 @@ module Statue
       ms: 'measure',
       g:  'gauge',
       kv: 'key/value',
-      s:  'set',
+      s:  'set'
     }
 
     attr_accessor :type, :name, :value, :sample_rate
