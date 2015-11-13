@@ -18,7 +18,7 @@ module Statue
     private
 
     def socket
-      @socket ||= address.connect
+      Thread.current[:statue_socket] ||= address.connect
     end
 
     def send_to_socket(message)
