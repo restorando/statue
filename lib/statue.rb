@@ -2,6 +2,7 @@ require 'statue/version'
 
 require 'statue/backends'
 require 'statue/metric'
+require 'statue/stopwatch'
 
 module Statue
   extend self
@@ -36,6 +37,10 @@ module Statue
   rescue
     report_increment("#{metric_name}.failure", **options)
     raise
+  end
+
+  def stopwatch(metric_name)
+    Stopwatch.new(name: metric_name, reporter: self)
   end
 
   def backend
