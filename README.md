@@ -37,11 +37,31 @@ Statue.backend = Statue::LoggerBackend.new(Rails.logger)
 
 ## Usage
 
+### Common meassurments
+
 `Statue.report_increment('metric.name')` -> send to Statsd an increment for the counter `metric.name`
 
-`Statue.report_duration('metric.name') { some_operation } # => some_operation_result` -> send to Statsd the measure for the block duration in `metric.name`
+`Statue.report_duration('metric.name') { some_operation } # => some_operation_result` -> send to Statsd the
+measure for the block duration in `metric.name`
 
-`Statue.report_success_or_failure('metric.name') { some_operation } # => some_operation_result` -> checks the result of the block, if its a `truthy` value, then increments `metric.name.success`, else it increments `metric.name.failure`.
+`Statue.report_success_or_failure('metric.name') { some_operation } # => some_operation_result` -> checks the
+result of the block, if its a `truthy` value, then increments `metric.name.success`, else it increments
+`metric.name.failure`.
+
+### Stopwatch
+
+The stopwatch provides an easy way to track the duration of a long process with multiple phases.
+
+```ruby
+stopwatch = Statue.stopwatch("metric") # => Starts tracking time
+
+while something do
+  do_something
+  stopwatch.partial # => reports duration from last partial until now as: "metric.runtime.partial"
+end
+
+stopwatch.stop # => reports duration from start until now as: "metric.runtime.total"
+```
 
 ### Rack Integration
 
