@@ -97,7 +97,7 @@ module Statue
     # unmodified: (304)
     # redirect: (3XX)
     def status_group(status)
-      case status
+      case status.to_i
       when 100..299
         'success'
       when 304
