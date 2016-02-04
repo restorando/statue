@@ -23,6 +23,10 @@ module Statue
     backend << Metric.counter(metric_name, **options)
   end
 
+  def report_gauge(metric_name, value, **options)
+    backend << Metric.gauge(metric_name, value, **options)
+  end
+
   def report_success_or_failure(metric_name, success_method: nil, **options, &block)
     result  = block.call
     success = success_method ? result.public_send(success_method) : result
