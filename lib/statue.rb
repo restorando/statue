@@ -19,8 +19,8 @@ module Statue
     result
   end
 
-  def report_increment(metric_name, **options)
-    backend << Metric.counter(metric_name, **options)
+  def report_increment(metric_name, value = 1, **options)
+    backend << Metric.counter(metric_name, value, **options)
   end
 
   def report_gauge(metric_name, value, **options)

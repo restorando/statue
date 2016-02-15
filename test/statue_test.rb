@@ -12,6 +12,13 @@ describe Statue do
       assert_equal 1, Statue.backend.captures.size
       assert_equal "some.counter:1|c", Statue.backend.captures.first.to_s
     end
+
+    it "Allows to increment by a custom value" do
+      Statue.report_increment("some.counter", 5)
+
+      assert_equal 1, Statue.backend.captures.size
+      assert_equal "some.counter:5|c", Statue.backend.captures.first.to_s
+    end
   end
 
   describe ".report_duration" do
