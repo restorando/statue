@@ -49,6 +49,17 @@ describe Statue do
 
   end
 
+  describe ".report_gauge" do
+
+    it "adds a gauge metric to the backend using the fixed value" do
+      result = Statue.report_gauge("some.gauge", 23)
+
+      assert_equal 1, Statue.backend.captures.size
+      assert_equal "some.gauge:23|g", Statue.backend.captures.first.to_s
+    end
+
+  end
+
   describe ".report_success_or_failure" do
 
     it "Adds a counter metric to the backend with .success suffix with a truthy result" do

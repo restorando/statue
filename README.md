@@ -39,7 +39,9 @@ Statue.backend = Statue::LoggerBackend.new(Rails.logger)
 
 ### Common meassurments
 
-`Statue.report_increment('metric.name')` -> send to Statsd an increment for the counter `metric.name`
+`Statue.report_increment('metric.name')` -> send to Statsd an increment to the counter `metric.name`
+
+`Statue.report_gauge('metric.name', value)` -> send to Statsd the gauge value for `metric.name`
 
 `Statue.report_duration('metric.name') { some_operation } # => some_operation_result` -> send to Statsd the
 measure for the block duration in `metric.name`
