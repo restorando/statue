@@ -2,10 +2,11 @@ require 'socket'
 
 module Statue
   class UDPBackend
-    attr_reader :address
+    attr_reader :host, :port
 
     def initialize(host = nil, port = nil)
-      @address = Addrinfo.udp(host || "127.0.0.1", port || 8125)
+      @host = host
+      @port = port
     end
 
     def collect_metric(metric)
@@ -18,7 +19,10 @@ module Statue
     private
 
     def socket
-      Thread.current[:statue_socket] ||= address.connect
+      Thread.current[:statue_socket] ||= begin
+        socket = UDPSocket.new(Addrinfo.ip(host).afamily)
+        socket.connect(host, port)
+      end
     end
 
     def send_to_socket(message)
