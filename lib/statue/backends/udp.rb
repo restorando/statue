@@ -22,6 +22,7 @@ module Statue
       Thread.current[:statue_socket] ||= begin
         socket = UDPSocket.new(Addrinfo.ip(host).afamily)
         socket.connect(host, port)
+        socket
       end
     end
 
