@@ -7,7 +7,7 @@ describe Statue::Stopwatch do
 
   describe "#partial" do
     it "reports the duration between start and the partial call" do
-      stopwatch = Statue::Stopwatch.new(name: "my_watch", now: 0)
+      stopwatch = Statue::Stopwatch.new("my_watch", now: 0)
       stopwatch.partial(now: 42)
 
       assert_equal 1, Statue.backend.captures.size
@@ -15,7 +15,7 @@ describe Statue::Stopwatch do
     end
 
     it "can report multiple partials" do
-      stopwatch = Statue::Stopwatch.new(name: "my_watch", now: 0)
+      stopwatch = Statue::Stopwatch.new("my_watch", now: 0)
       (1..20).each { |now| stopwatch.partial(now: now) }
 
       assert_equal 20, Statue.backend.captures.size
@@ -25,7 +25,7 @@ describe Statue::Stopwatch do
     end
 
     it "tracks time correctly" do
-      stopwatch = Statue::Stopwatch.new(name: "my_watch")
+      stopwatch = Statue::Stopwatch.new("my_watch")
       stopwatch.partial
 
       assert Statue.backend.captures.first.value > 0, "partial metric time should be greater than zero"
@@ -34,7 +34,7 @@ describe Statue::Stopwatch do
 
   describe "#stop" do
     it "reports the duration between start and the stop call" do
-      stopwatch = Statue::Stopwatch.new(name: "my_watch", now: 0)
+      stopwatch = Statue::Stopwatch.new("my_watch", now: 0)
       stopwatch.stop(now: 42)
 
       assert_equal 1, Statue.backend.captures.size
@@ -42,7 +42,7 @@ describe Statue::Stopwatch do
     end
 
     it "is not affected by partials" do
-      stopwatch = Statue::Stopwatch.new(name: "my_watch", now: 0)
+      stopwatch = Statue::Stopwatch.new("my_watch", now: 0)
       (1..20).each { |now| stopwatch.partial(now: now) }
       stopwatch.stop(now: 21)
 
@@ -52,7 +52,7 @@ describe Statue::Stopwatch do
     end
 
     it "can send the last partial duration" do
-      stopwatch = Statue::Stopwatch.new(name: "my_watch", now: 0)
+      stopwatch = Statue::Stopwatch.new("my_watch", now: 0)
       (1..20).each { |now| stopwatch.partial(now: now) }
       stopwatch.stop(now: 21, report_partial: true)
 
@@ -65,7 +65,7 @@ describe Statue::Stopwatch do
     end
 
     it "can send the last partial duration with a special name" do
-      stopwatch = Statue::Stopwatch.new(name: "my_watch", now: 0)
+      stopwatch = Statue::Stopwatch.new("my_watch", now: 0)
       (1..20).each { |now| stopwatch.partial(now: now) }
       stopwatch.stop(now: 21, report_partial: "runtime.final_lap")
 
@@ -75,7 +75,7 @@ describe Statue::Stopwatch do
     end
 
     it "tracks time correctly" do
-      stopwatch = Statue::Stopwatch.new(name: "my_watch")
+      stopwatch = Statue::Stopwatch.new("my_watch")
       stopwatch.stop
 
       assert Statue.backend.captures.first.value > 0, "partial metric time should be greater than zero"

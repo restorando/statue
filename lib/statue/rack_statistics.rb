@@ -44,7 +44,7 @@ module Statue
       end
     end
 
-    def initialize(app, path_name: DEFAULT_PATH_NAME)
+    def initialize(app, path_name = DEFAULT_PATH_NAME)
       @app = app
       @path_name  = path_name
     end

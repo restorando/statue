@@ -1,27 +1,33 @@
 module Statue
   class Stopwatch
 
-    def initialize(name:, now: clock_now, reporter: Statue)
-      @reporter = reporter
+    def initialize(name, options = {})
       @name     = name
-      @start    = @partial = now
+      @reporter = options[:reporter] || Statue
+      @start    = @partial = options[:now] || clock_now
     end
 
-    def partial(suffix = nil, now: clock_now, **options)
+    def partial(options = {})
+      suffix = options.delete(:suffix)
+      now = options.delete(:now) || clock_now
       previous, @partial = @partial, now
 
-      @reporter.report_duration(metric_name(suffix || "runtime.partial"), @partial - previous, **options)
+      @reporter.report_duration(metric_name(suffix || "runtime.partial"), @partial - previous, options)
     end
 
-    def stop(suffix = nil, now: clock_now, report_partial: false, **options)
-      partial(report_partial.is_a?(String) ? report_partial : nil, now: now, **options) if report_partial
+    def stop(options = {})
+      suffix = options.delete(:suffix)
+      now = options.delete(:now) || clock_now
+      report_partial = options.delete(:report_partial) || false
+
+      partial(options.merge(now: now, suffix: report_partial.is_a?(String) ? report_partial : nil)) if report_partial
 
       previous, @start = @start, now
 
-      @reporter.report_duration(metric_name(suffix || "runtime.total"), @start - previous, **options)
+      @reporter.report_duration(metric_name(suffix || "runtime.total"), @start - previous, options)
     end
 
-    def reset(now: clock_now)
+    def reset(now = clock_now)
       @start = @partial = now
     end
 
@@ -32,8 +38,7 @@ module Statue
     end
 
     def clock_now
-      Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      Statue.clock_now
     end
-
   end
 end

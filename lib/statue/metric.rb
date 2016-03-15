@@ -10,24 +10,25 @@ module Statue
 
     attr_accessor :type, :name, :value, :sample_rate
 
-    def self.counter(name, value = 1, **options)
-      new(type: :c, value: value, name: name, **options)
+    def self.counter(name, value = 1, options = {})
+      new(options.merge(type: :c, value: value, name: name))
     end
 
-    def self.gauge(name, value, **options)
-      new(type: :g, value: value, name: name, **options)
+    def self.gauge(name, value, options = {})
+      new(options.merge(type: :g, value: value, name: name))
     end
 
-    def self.measure(name, duration: nil, **options, &block)
+    def self.measure(name, options = {}, &block)
+      duration = options.delete(:duration)
       value = duration || Statue.duration(&block)
-      new(type: :ms, value: value, name: name, **options)
+      new(options.merge(type: :ms, value: value, name: name))
     end
 
-    def initialize(type:, name:, value:, sample_rate: 1.0)
-      @type  = type
-      @name  = name
-      @value = value
-      @sample_rate = sample_rate
+    def initialize(options = {})
+      @type  = options[:type]
+      @name  = options[:name]
+      @value = options[:value]
+      @sample_rate = options[:sample_rate] || 1.0
     end
 
     def to_s
