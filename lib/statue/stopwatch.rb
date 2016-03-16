@@ -27,8 +27,8 @@ module Statue
       @reporter.report_duration(metric_name(suffix || "runtime.total"), @start - previous, options)
     end
 
-    def reset(now = clock_now)
-      @start = @partial = now
+    def reset(options = {})
+      @start = @partial = options[:now] || clock_now
     end
 
     private
