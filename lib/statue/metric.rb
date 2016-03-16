@@ -25,9 +25,9 @@ module Statue
     end
 
     def initialize(options = {})
-      @type  = options[:type]
-      @name  = options[:name]
-      @value = options[:value]
+      @type  = options.fetch(:type)
+      @name  = options.fetch(:name)
+      @value = options.fetch(:value)
       @sample_rate = options[:sample_rate] || 1.0
     end
 
