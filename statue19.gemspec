@@ -4,12 +4,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'statue/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "statue"
+  spec.name          = "statue19"
   spec.version       = Statue::VERSION
   spec.authors       = ["Juan Barreneche"]
   spec.email         = ["devs@restorando.com"]
   spec.summary       = %q{Easily track application metrics into Statsie}
-  spec.description   = %q{Track application metrics to Statsie}
+  spec.description   = %q{Track application metrics to Statsie (compat with ruby 1.9)}
   spec.homepage      = ""
   spec.license       = "MIT"
 
