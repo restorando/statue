@@ -44,9 +44,9 @@ module Statue
       end
     end
 
-    def initialize(app, path_name: DEFAULT_PATH_NAME)
+    def initialize(app, options = {})
       @app = app
-      @path_name  = path_name
+      @path_name  = options[:path_name] || DEFAULT_PATH_NAME
     end
 
     def call(env)
