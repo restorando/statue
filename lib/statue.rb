@@ -7,9 +7,9 @@ require 'statue/stopwatch'
 module Statue
   extend self
 
-  attr_accessor :namespace, :logger
-
-  attr_accessor :backend
+  attr_accessor :namespace
+  attr_accessor :logger
+  attr_writer :backend
 
   def report_duration(metric_name, duration = nil, **options, &block)
     result = nil
@@ -29,13 +29,9 @@ module Statue
 
   def report_success_or_failure(metric_name, success_method: nil, **options, &block)
     result  = block.call
-    success = success_method ? result.public_send(success_method) : result
 
-    if success
-      report_increment("#{metric_name}.success", **options)
-    else
-      report_increment("#{metric_name}.failure", **options)
-    end
+    success = success_method ? result.public_send(success_method) : result
+    report_increment("#{metric_name}.#{success ? "success" : "failure"}", **options)
 
     result
   rescue
@@ -48,13 +44,7 @@ module Statue
   end
 
   def backend
-    @backend ||= UDPBackend.new
-  end
-
-  def duration
-    start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    yield
-    Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+    @backend ||= UDPBackend.from_uri("statsd://127.0.0.1:8125")
   end
 
   def debug(text, &block)
