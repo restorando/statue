@@ -1,0 +1,8 @@
+language: ruby
+cache: bundler
+rvm:
+- 2.2.0
+- 2.1.6
+- jruby-9.1.8.0
+bundler_args: --binstubs
+script: bin/rake test
