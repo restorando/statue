@@ -39,7 +39,7 @@ describe Statue do
     end
 
     it "adds a measure metric to the backend using the fixed value" do
-      result = Statue.report_duration("some.timer", 2.5)
+      _result = Statue.report_duration("some.timer", 2.5)
 
       assert_equal 1, Statue.backend.captures.size
       assert_equal "some.timer:2.5|ms", Statue.backend.captures.first.to_s
@@ -59,7 +59,7 @@ describe Statue do
   describe ".report_gauge" do
 
     it "adds a gauge metric to the backend using the fixed value" do
-      result = Statue.report_gauge("some.gauge", 23)
+      _result = Statue.report_gauge("some.gauge", 23)
 
       assert_equal 1, Statue.backend.captures.size
       assert_equal "some.gauge:23|g", Statue.backend.captures.first.to_s
