@@ -1,0 +1,7 @@
+language: ruby
+cache: bundler
+rvm:
+- 1.9.3
+- jruby-19mode
+bundler_args: --binstubs
+script: bin/rake test

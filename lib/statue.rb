@@ -7,9 +7,9 @@ require 'statue/stopwatch'
 module Statue
   extend self
 
-  attr_accessor :namespace, :logger
-
-  attr_accessor :backend
+  attr_accessor :namespace
+  attr_accessor :logger
+  attr_writer :backend
 
   def report_duration(metric_name, duration = nil, options = {}, &block)
     result = nil
@@ -30,13 +30,9 @@ module Statue
   def report_success_or_failure(metric_name, options = {}, &block)
     success_method = options.delete(:success_method)
     result  = block.call
-    success = success_method ? result.public_send(success_method) : result
 
-    if success
-      report_increment("#{metric_name}.success", 1, options)
-    else
-      report_increment("#{metric_name}.failure", 1, options)
-    end
+    success = success_method ? result.public_send(success_method) : result
+    report_increment("#{metric_name}.#{success ? "success" : "failure"}", 1, options)
 
     result
   rescue
@@ -49,13 +45,7 @@ module Statue
   end
 
   def backend
-    @backend ||= UDPBackend.new
-  end
-
-  def duration
-    start = clock_now
-    yield
-    clock_now - start
+    @backend ||= UDPBackend.from_uri("statsd://127.0.0.1:8125")
   end
 
   def debug(text, &block)
@@ -64,20 +54,6 @@ module Statue
 
   def error(text, &block)
     logger.error(text, &block) if logger
-  end
-
-  if defined?(Process::CLOCK_MONOTONIC)
-    def clock_now
-      Process.clock_gettime Process::CLOCK_MONOTONIC
-    end
-  elsif RUBY_PLATFORM == 'java'
-    def clock_now
-      java.lang.System.nanoTime() / 1_000_000_000.0
-    end
-  else
-    def clock_now
-      Time.now.to_f
-    end
   end
 
 end

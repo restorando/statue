@@ -4,7 +4,12 @@ module Statue
   class UDPBackend
     attr_reader :host, :port
 
-    def initialize(host = nil, port = nil)
+    def self.from_uri(uri)
+      uri = URI(uri)
+      new(uri.host, uri.port)
+    end
+
+    def initialize(host, port)
       @host = host
       @port = port
     end
