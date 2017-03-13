@@ -1,5 +1,7 @@
 # Statue
 
+![Build Status](https://travis-ci.org/restorando/statue.svg?branch=ruby19-compat)
+
     / ___)(_  _)/ _\(_  _)/ )( \(  __)
     \___ \  )( /    \ )(  ) \/ ( ) _)
     (____/ (__)\_/\_/(__) \____/(____)

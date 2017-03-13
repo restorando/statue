@@ -8,7 +8,7 @@ describe Statue::Stopwatch do
   describe "#partial" do
     it "reports the duration between start and the partial call" do
       stopwatch = Statue::Stopwatch.new("my_watch", now: 0)
-      stopwatch.partial(now: 42)
+      stopwatch.partial(now: 42) # 42 milliseconds after
 
       assert_equal 1, Statue.backend.captures.size
       assert_equal "my_watch.runtime.partial:42|ms", Statue.backend.captures.first.to_s
@@ -47,7 +47,7 @@ describe Statue::Stopwatch do
       stopwatch.stop(now: 21)
 
       assert_equal 21, Statue.backend.captures.size
-      *partials, total = Statue.backend.captures
+      *_partials, total = Statue.backend.captures
       assert_equal "my_watch.runtime.total:21|ms", total.to_s
     end
 
@@ -70,7 +70,7 @@ describe Statue::Stopwatch do
       stopwatch.stop(now: 21, report_partial: "runtime.final_lap")
 
       assert_equal 22, Statue.backend.captures.size
-      *partials, special_partial, total = Statue.backend.captures
+      *_partials, special_partial, _total = Statue.backend.captures
       assert_equal "my_watch.runtime.final_lap:1|ms", special_partial.to_s
     end
 
