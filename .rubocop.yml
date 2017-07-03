@@ -1,0 +1,4 @@
+---
+inherit_from:
+  - .rubocop-common.yml
+  - .rubocop_todo.yml

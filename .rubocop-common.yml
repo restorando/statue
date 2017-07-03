@@ -1,0 +1,223 @@
+---
+AllCops:
+  DisplayCopNames: true
+  Exclude:
+  - '**/legacy/*.rb'
+  - '**/bundle/**/*'
+  - '**/bundler/**/*'
+  - 'bin/*'
+  - 'db/schema.rb'
+  - 'node_modules/**/*'
+  - 'vendor/**/*'
+  - 'ruby/**/*'
+  - 'tmp/**/*'
+
+Lint/AmbiguousBlockAssociation:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Lint/ScriptPermission:
+  Exclude:
+    - 'Rakefile' # TODO: check!
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Layout/EmptyLinesAroundExceptionHandlingKeywords:
+  Enabled: false
+
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Layout/EmptyLineBetweenDefs:
+  AllowAdjacentOneLineDefs: true
+
+Layout/FirstParameterIndentation:
+  EnforcedStyle: consistent
+
+Layout/IndentArray:
+  EnforcedStyle: consistent
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Layout/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/AlignHash:
+  EnforcedHashRocketStyle: key
+  EnforcedLastArgumentHashStyle: always_ignore
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
+Layout/IndentHash:
+  EnforcedStyle: consistent
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/DotPosition:
+  EnforcedStyle: trailing
+
+Layout/SpaceInsideBlockBraces:
+  SpaceBeforeBlockParameters: true
+
+# It doesnt handle cases when we want to align multiple methods call into a table like
+Layout/SpaceBeforeFirstArg:
+  Enabled: false
+
+Layout/MultilineMethodCallBraceLayout:
+  EnforcedStyle: new_line
+
+Lint/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+Lint/UselessAssignment:
+  Enabled: true
+
+Lint/ShadowingOuterLocalVariable:
+  Enabled: true
+
+Lint/AssignmentInCondition:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 110
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Max: 5
+  CountKeywordArgs: false
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Performance/RedundantMatch:
+  Enabled: false
+
+Performance/RedundantMerge:
+  Enabled: false
+
+Performance/TimesMap:
+  Enabled: false
+
+Security/YAMLLoad:
+  Enabled: false
+
+Style/CaseEquality:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/GuardClause:
+  MinBodyLength: 3
+
+Style/Lambda:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded
+
+Style/GuardClause:
+  Enabled: false
+
+Style/OptionalArguments:
+  Enabled: false
+
+Style/ParallelAssignment:
+  Enabled: false
+
+# This one is usefull for class attr_*
+Style/TrivialAccessors:
+  AllowDSLWriters: true
+
+Style/ModuleFunction:
+  Enabled: false
+
+Style/FormatString:
+  Enabled: false
+
+Style/TrailingUnderscoreVariable:
+  Enabled: false
+
+Style/SingleLineBlockParams:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
+
+Style/Alias:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  Enabled: true
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/StructInheritance:
+  Enabled: false
+
+Style/SymbolProc:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%i': '[]'
+    '%w': '[]'
+    '%W': '[]'
+    '%': '{}'
+
+Style/CollectionMethods:
+  PreferredMethods:
+    reduce: inject
+    collect: map
+    collect!: 'map!'
+    detect: find
+    detect!: 'find!'
+    find_all: select
+    find_all!: 'select!'
+
+Style/SignalException:
+  EnforcedStyle: only_raise
+
+Style/SingleLineMethods:
+  AllowIfMethodIsEmpty: true
+
+# replaces $1 x Regexp.last_match[1]
+Style/PerlBackrefs:
+  Enabled: false
+
+# There are valid cases (eg. Date.parse(date) rescue nil)
+Style/RescueModifier:
+  Enabled: false
+
+Style/BlockDelimiters:
+  Exclude:
+  - '**/spec/**/*_spec.rb'
