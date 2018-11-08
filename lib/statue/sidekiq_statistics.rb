@@ -27,6 +27,8 @@ module Statue
     def self.job_metric_name(worker, message)
       job_name = if worker.respond_to?(:job_name)
         worker.job_name(*message["args"])
+      elsif message.dig("args", 0, "job_class")
+        message.dig("args", 0, "job_class")
       else
         worker.class.name.gsub(/::/, "-")
       end
@@ -36,7 +38,7 @@ module Statue
     # Middleware for tracking common job run metrics
     class SidekiqMiddleware
       def call(worker, message, _queue)
-        job_metric_name = RCore::JobStatistics.job_metric_name(worker, message)
+        job_metric_name = Statue::SidekiqStatistics.job_metric_name(worker, message)
 
         if message["retry_count"]
           # Count retried jobs
@@ -62,7 +64,7 @@ module Statue
       def exceeded(&block)
         super do |*args|
           yield(*args)
-          RCore::JobStatistics.count_event("throttled", worker, "queue" => queue, "args" => payload)
+          Statue::SidekiqStatistics.count_event("throttled", worker, "queue" => queue, "args" => payload)
         end
       end
     end
