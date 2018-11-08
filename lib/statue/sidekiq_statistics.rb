@@ -28,6 +28,7 @@ module Statue
       job_name = if worker.respond_to?(:job_name)
         worker.job_name(*message["args"])
       elsif message.dig("args", 0, "job_class")
+        # search for the class name that resides in the message received
         message.dig("args", 0, "job_class")
       else
         worker.class.name.gsub(/::/, "-")
