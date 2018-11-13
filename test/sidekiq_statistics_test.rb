@@ -44,33 +44,35 @@ describe Statue::SidekiqStatistics do
   end
 
   it "allows arbitrary event counting" do
-    # expect {
-    #   SidekiqStatistics.count_event("test", FooJob.new, "queue" => "queue")
-    # }.to change(metrics, :size).by(1)
+    Statue::SidekiqStatistics.count_event("test", FooJob.new, "queue" => "queue")
 
-    expect(metrics.first.name).to eq("job.queue.Statue-FooJob.test")
-    expect(metrics.first.type).to eq(:c)
+    assert_equal(metrics.size, 1)
+    assert_equal(metrics.first.name, "job.queue.FooJob.test")
+    assert_equal(metrics.first.type, :c)
   end
 
   describe "Sidekiq Middleware" do
     let(:worker) { FooJob.new }
-    let(:middleware) { SidekiqStatistics::SidekiqMiddleware.new }
-    let(:msg) { { "enqueued_at" => Time.current.to_f, "queue" => "default" } }
+    let(:middleware) { Statue::SidekiqStatistics::SidekiqMiddleware.new }
+    let(:msg) { { "enqueued_at" => Time.now.to_f, "queue" => "default" } }
 
     it "tracks job performance" do
-      expect(Statue::Clock).to receive(:duration_in_ms).and_return(5)
+      # expect(Statue::Clock).to receive(:duration_in_ms).and_return(5)
+
+      assert_send([Statue::Clock, :duration_in_ms, 5])
+
       middleware.call(worker, msg, msg["queue"]) { nil }
 
-      performance = metrics.find { |m| m.name == "job.default.RCore-FooJob" }
-      expect(performance.type).to eq(:ms)
-      expect(performance.value).to eq(5)
+      performance = metrics.find { |m| m.name == "job.default.FooJob" }
+      assert_equal(performance.type, :ms)
+      assert_equal(performance.value, 5)
     end
 
     it "counts block call always as a success" do
       middleware.call(worker, msg, msg["queue"]) { false }
 
-      success = metrics.find { |m| m.name == "job.default.RCore-FooJob.success" }
-      expect(success.type).to eq(:c)
+      success = metrics.find { |m| m.name == "job.default.FooJob.success" }
+      assert_equal(success.type, :c)
     end
 
     it "counts exceptions as job failure" do
@@ -82,28 +84,30 @@ describe Statue::SidekiqStatistics do
         middleware.call(worker, msg, msg["queue"]) { raise "a" }
       }
 
-      success = metrics.find { |m| m.name == "job.default.RCore-FooJob.success" }
-      expect(success).to be_nil
+      success = metrics.find { |m| m.name == "job.default.FooJob.success" }
+      assert_nil(success)
 
-      failure = metrics.find { |m| m.name == "job.default.RCore-FooJob.failure" }
-      expect(failure.type).to eq(:c)
+      failure = metrics.find { |m| m.name == "job.default.FooJob.failure" }
+      assert_equal(failure.type, :c)
     end
 
     it "counts retries as job failure" do
       msg["retry_count"] = 1
       middleware.call(worker, msg, msg["queue"]) { true }
 
-      retry_metric = metrics.find { |m| m.name == "job.default.RCore-FooJob.retry" }
-      expect(retry_metric.type).to eq(:c)
+      retry_metric = metrics.find { |m| m.name == "job.default.FooJob.retry" }
+      assert_equal(retry_metric.type, :c)
     end
 
     it "tracks queue latency" do
-      msg["enqueued_at"] = Time.current - 1.minute
+      # Time - 1 minute
+      msg["enqueued_at"] = Time.now - 60
+
       middleware.call(worker, msg, msg["queue"]) { nil }
 
-      latency = metrics.find { |m| m.name == "job.default.RCore-FooJob.latency" }
-      expect(latency.type).to eq(:ms)
-      expect(latency.value).to be_within(0.001).of(60)
+      latency = metrics.find { |m| m.name == "job.default.FooJob.latency" }
+      assert_equal(latency.type, :ms)
+      assert_in_delta(latency.value, 60, delta = 0.001)
     end
   end
 end
