@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rack", "~> 1.6"
   spec.add_development_dependency "rack-test", "~> 0.6.3"
   spec.add_development_dependency "minitest"
-  spec.add_development_dependency "sidekiq"
+  spec.add_development_dependency "sidekiq", "~> 3.2"
   spec.add_development_dependency "pry-rescue"
   spec.add_development_dependency "pry-stack_explorer"
 end
