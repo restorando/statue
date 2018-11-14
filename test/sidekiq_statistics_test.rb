@@ -7,30 +7,12 @@ describe Statue::SidekiqStatistics do
 
   Sidekiq::Testing.inline!
 
-  # around do |example|
-  #   Sidekiq::Testing.inline! do
-  #     example.call
-  #   end
-  # end
-
-  # before do
-  #   Sidekiq::Testing.inline! do
-  #     example.call
-  #   end
-  # end
-
   after do
-    # Sidekiq::Testing.inline! do
-    #   example.call
-    # end
-
     Statue.backend.captures.clear
   end
 
   class FooJob
     include Sidekiq::Worker
-
-    # queue "statue-default"
 
     def job_name(*_args)
       self.class.name.gsub(/::/, "-")
@@ -52,20 +34,18 @@ describe Statue::SidekiqStatistics do
   end
 
   describe "Sidekiq Middleware" do
-    let(:worker) { FooJob.new }
+    let(:worker)     { FooJob.new }
     let(:middleware) { Statue::SidekiqStatistics::SidekiqMiddleware.new }
-    let(:msg) { { "enqueued_at" => Time.now.to_f, "queue" => "default" } }
+    let(:msg)        { { "enqueued_at" => Time.now.to_f, "queue" => "default" } }
 
     it "tracks job performance" do
-      # expect(Statue::Clock).to receive(:duration_in_ms).and_return(5)
+      Statue::Clock.stub :duration_in_ms, 5 do
+        middleware.call(worker, msg, msg["queue"]) { nil }
 
-      assert_send([Statue::Clock, :duration_in_ms, 5])
-
-      middleware.call(worker, msg, msg["queue"]) { nil }
-
-      performance = metrics.find { |m| m.name == "job.default.FooJob" }
-      assert_equal(performance.type, :ms)
-      assert_equal(performance.value, 5)
+        performance = metrics.find { |m| m.name == "job.default.FooJob" }
+        assert_equal(performance.type, :ms)
+        assert_equal(performance.value, 5)
+      end
     end
 
     it "counts block call always as a success" do
@@ -76,10 +56,6 @@ describe Statue::SidekiqStatistics do
     end
 
     it "counts exceptions as job failure" do
-      # expect {
-      #   middleware.call(worker, msg, msg["queue"]) { raise "a" }
-      # }.to raise_error("a")
-
       assert_raises("a") {
         middleware.call(worker, msg, msg["queue"]) { raise "a" }
       }
@@ -100,7 +76,7 @@ describe Statue::SidekiqStatistics do
     end
 
     it "tracks queue latency" do
-      # Time - 1 minute
+      # Time.now - 1 minute
       msg["enqueued_at"] = Time.now - 60
 
       middleware.call(worker, msg, msg["queue"]) { nil }
