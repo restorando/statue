@@ -1,3 +1,9 @@
+## [0.4.1] - 2017-03-15
+
+### Documentation
+
+- Added a simple example to the README.md detailing how to use the new `SidekiqStatistics` middleware.
+
 ## [0.4.0] - 2017-03-13
 
 ### Feature
