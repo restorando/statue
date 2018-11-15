@@ -39,7 +39,7 @@ Statue.backend = Statue::LoggerBackend.new(Rails.logger)
 
 ## Usage
 
-### Common meassurments
+### Common measurements
 
 `Statue.report_increment('metric.name')` -> send to Statsd an increment to the counter `metric.name`
 
@@ -70,6 +70,20 @@ stopwatch.stop # => reports duration from start until now as: "metric.runtime.to
 ### Rack Integration
 
 We provide a middleware to track basic request metrics, see: Statue::RackStatistics
+
+### Sidekiq Integration
+
+There's also a middleware for **Sidekiq**, which can easily be added by adding these lines to the initializer:
+
+```ruby
+# config/initializers/sidekiq.rb
+
+Sidekiq.configure_server do |config|
+  config.server_middleware do |chain|
+    chain.add Statue::SidekiqStatistics::SidekiqMiddleware
+  end
+end
+```
 
 ## Contributing
 
