@@ -1,3 +1,16 @@
+## [0.4.0] - 2017-03-13
+
+### Feature
+
+- Added `SidekiqStatistics` middleware support
+- To integrate it with your middleware, just add it to your sidekiq's initializer like follows:
+
+```ruby
+  config.server_middleware do |chain|
+    chain.add Statue::SidekiqStatistics::SidekiqMiddleware
+  end
+```
+
 ## [0.3.0] - 2017-03-13
 
 ### Feature
